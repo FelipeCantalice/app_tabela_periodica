@@ -17,7 +17,7 @@ void main() {
   });
 
   test('fetch elementos quimicos ...', () async {
-    var data = await usecase.getElementoQuimico();
+    var data = await usecase();
 
     expect(data, isA<List<ElementoQuimico>>());
   });

@@ -12,7 +12,7 @@ class FetchElementosQuimicosImpl implements FetchElementosQuimicos {
   });
 
   @override
-  Future<List<ElementoQuimico>> getElementoQuimico() async {
+  Future<List<ElementoQuimico>> call() async {
     try {
       final httpResponse =
           await httpClient.request(url: url, method: 'get') as List;
