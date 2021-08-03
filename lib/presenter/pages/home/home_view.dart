@@ -1,7 +1,8 @@
+import 'package:app_tabela_periodica/domain/entities/elemento_quimico.dart';
+import 'package:app_tabela_periodica/presenter/pages/elemento-details/elemento_details_page.dart';
 import 'package:app_tabela_periodica/presenter/widgets/periodic_table_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'home_controller.dart';
 
 class HomeView extends StatelessWidget {
@@ -11,36 +12,87 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Provider.of<HomeController>(context);
 
+    void _navigate(ElementoQuimico elemento) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (c) => ElementoQuimicDetails(elemento: elemento),
+        ),
+      );
+    }
+
     Widget _gridView() {
+      final elements = controller.filtedredElementos.isNotEmpty
+          ? controller.filtedredElementos
+          : controller.elementos;
       return GridView.builder(
         padding: const EdgeInsets.all(25),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 130,
-          mainAxisExtent: 130,
+          maxCrossAxisExtent: 170,
+          mainAxisExtent: 140,
           childAspectRatio: 3 / 5,
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
         ),
-        itemCount: controller.elementos.length,
+        itemCount: elements.length,
         itemBuilder: (ctx, i) {
-          final elemento = controller.elementos[i];
-          return PeriodicTableItem(
-            elemento: elemento,
+          final elemento = elements.elementAt(i);
+          return InkWell(
+            onTap: () => _navigate(elemento),
+            child: PeriodicTableItem(
+              elemento: elemento,
+            ),
           );
         },
       );
     }
 
-    return Container(
-      child: FutureBuilder<void>(
-          future: controller.fetchElementos(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return Text("Loading tasks...");
-            }
-
-            return _gridView();
-          }),
+    return Scaffold(
+      body: Stack(
+        alignment: Alignment.topLeft,
+        children: [
+          Container(
+            child: controller.isLoading
+                ? Center(
+                    child: Text("Loading..."),
+                  )
+                : _gridView(),
+          ),
+          controller.showSearch
+              ? Positioned(
+                  bottom: 20,
+                  left: 10,
+                  child: Card(
+                    elevation: 2,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      height: 200,
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          TextField(
+                            onChanged: (String v) =>
+                                controller.filterElementos(v),
+                            decoration: InputDecoration(
+                              hintText: 'Pesquisar',
+                              suffixIcon: Icon(Icons.search),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => controller.toggleSearch(),
+        child: Icon(
+          Icons.search,
+        ),
+      ),
     );
   }
 }

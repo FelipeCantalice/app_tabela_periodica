@@ -11,17 +11,17 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ChangeNotifierProvider<HomeController>(
+    return ChangeNotifierProvider<HomeController>(
         create: (_) => HomeController(
-            usecase: FetchElementosQuimicosImpl(
-          httpClient: HttpAdapter(
-            Client(),
+          usecase: FetchElementosQuimicosImpl(
+            httpClient: HttpAdapter(
+              Client(),
+            ),
+            url:
+                'https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json',
           ),
-          url: 'https://neelpatel05.pythonanywhere.com/',
-        )),
+        ),
         child: HomeView(),
-      ),
-    );
+      );
   }
 }
