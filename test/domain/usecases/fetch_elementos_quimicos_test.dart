@@ -13,7 +13,10 @@ void main() {
   setUp(() {
     cliente = HttpAdapter(Client());
     usecase = FetchElementosQuimicosImpl(
-        httpClient: cliente, url: 'https://neelpatel05.pythonanywhere.com/');
+      httpClient: cliente,
+      url:
+          'https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json',
+    );
   });
 
   test('fetch elementos quimicos ...', () async {

@@ -14,11 +14,13 @@ class FetchElementosQuimicosImpl implements FetchElementosQuimicos {
   @override
   Future<List<ElementoQuimico>> call() async {
     try {
-      final httpResponse =
-          await httpClient.request(url: url, method: 'get') as List;
-      final data = httpResponse.map((e) => ElementoQuimico.fromMap(e)).toList();
-      return data;
+      final http = await httpClient.request(url: url, method: 'get')
+          as Map<String, dynamic>;
+      final data = http['elements'] as List;
+      final elements = data.map((e) => ElementoQuimico.fromMap(e)).toList();
+      return elements;
     } on HttpError catch (error) {
+      print(error.toString());
       throw error == HttpError.serverError;
     }
   }
