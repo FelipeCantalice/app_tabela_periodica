@@ -21,6 +21,7 @@ class EletronicDistribution extends StatelessWidget {
       ['5s', '5p', '5d', '5f'],
       ['6s', '6p', '6d', ' '],
       ['7s', ' ', ' ', ' '],
+      ['8s', ' ', ' ', ' '],
     ];
 
     Widget _rows() {
@@ -44,7 +45,7 @@ class EletronicDistribution extends StatelessWidget {
           textAlign: TextAlign.start,
           style: theme.textTheme.bodyText1?.copyWith(
             fontSize: 16,
-            color: exists ? Colors.black : Colors.grey[300],
+            color: exists ? Colors.black : Colors.grey[500],
           ),
         );
       }
@@ -69,8 +70,12 @@ class EletronicDistribution extends StatelessWidget {
     }
 
     return Container(
+      width: 220,
+      height: 180,
+      alignment: Alignment.center,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _rows(),
         ],
