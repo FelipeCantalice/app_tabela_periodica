@@ -1,7 +1,11 @@
 import 'package:app_tabela_periodica/presenter/widgets/details_description.dart';
+import 'package:app_tabela_periodica/presenter/widgets/details_graphic.dart';
+import 'package:app_tabela_periodica/presenter/widgets/element_shells.dart';
 import 'package:app_tabela_periodica/presenter/widgets/eletronic_distribution.dart';
+import 'package:app_tabela_periodica/presenter/widgets/section_container.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tabela_periodica/domain/entities/elemento_quimico.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ElementoQuimicDetails extends StatefulWidget {
   final ElementoQuimico elemento;
@@ -20,8 +24,28 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
     final element = widget.elemento;
     final theme = Theme.of(context);
 
+    final Widget _eletronicDistribution = EletronicDistribution(
+        distribution: element.electronConfiguration ?? '');
+
+    final Widget _elementShells = ElementSheels(
+      shells: element.shells,
+    );
+
+    void _showModal(Widget widget) {
+      final mediaQuery = MediaQuery.of(context);
+      showMaterialModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+          width: mediaQuery.size.width,
+          height: mediaQuery.size.height - 100,
+          alignment: Alignment.center,
+          child: widget,
+        ),
+      );
+    }
+
     Widget _itemSpace() {
-      return Container(height: 80, child: VerticalDivider(color: Colors.blue));
+      return Container(width: 20);
     }
 
     Widget _header() {
@@ -63,101 +87,62 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
     }
 
     Widget _characteriscts() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      return SectionContainer(
+        title: 'Characteristics',
         children: [
-          Text('Characteristics', style: theme.textTheme.headline5),
-          const SizedBox(height: 20),
-          Container(
-            width: double.maxFinite,
-            height: 60,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              children: [
-                Row(
-                  children: [
-                    DetailsDescription(
-                      title: "Atomic mass",
-                      description: element.atomicMass.toString(),
-                    ),
-
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Category",
-                      description: element.category,
-                    ),
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Number",
-                      description: element.number.toString(),
-                    ),
-
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Periodic",
-                      description: element.period.toString(),
-                    ),
-                    _itemSpace(),
-                    // DetailsDescription(
-                    //   title:"Phase",
-                    //   description:,
-                    // ),
-                    // _itemSpace(),
-                  ],
-                ),
-              ],
-            ),
+          DetailsDescription(
+            icon: Icons.bloodtype,
+            title: "Atomic mass",
+            description: element.atomicMass.toString(),
+          ),
+          _itemSpace(),
+          DetailsDescription(
+            icon: Icons.category,
+            title: "Category",
+            description: element.category,
+          ),
+          _itemSpace(),
+          DetailsDescription(
+            icon: Icons.grid_on,
+            title: "Number",
+            description: element.number.toString(),
+          ),
+          _itemSpace(),
+          DetailsDescription(
+            icon: Icons.grid_view_rounded,
+            title: "Periodic",
+            description: element.period.toString(),
           ),
         ],
       );
     }
 
     Widget _configurations() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      return SectionContainer(
+        title: 'Configurations',
         children: [
-          Text('Configurations', style: theme.textTheme.headline5),
-          const SizedBox(height: 20),
-          Container(
-            width: double.maxFinite,
-            height: 60,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              children: [
-                Row(
-                  children: [
-                    DetailsDescription(
-                      title: "Density",
-                      description: element.density.toString(),
-                    ),
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Affinity",
-                      description: element.electronAffinity.toString(),
-                    ),
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Melt",
-                      description: element.melt.toString(),
-                    ),
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Periodic",
-                      description: element.period.toString(),
-                    ),
-                    _itemSpace(),
-                    DetailsDescription(
-                      title: "Molar melt",
-                      description: element.molarHeat.toString(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          DetailsDescription(
+            icon: Icons.group_work,
+            title: "Density",
+            description: element.density.toString(),
+          ),
+          _itemSpace(),
+          DetailsDescription(
+            icon: Icons.hdr_auto,
+            title: "Affinity",
+            description: element.electronAffinity.toString(),
+          ),
+          _itemSpace(),
+          DetailsDescription(
+            icon: Icons.handyman,
+            title: "Melt",
+            description: element.melt.toString(),
+          ),
+          _itemSpace(),
+          DetailsDescription(
+            icon: Icons.h_plus_mobiledata,
+            title: "Molar melt",
+            description: element.molarHeat.toString(),
           ),
         ],
       );
@@ -171,18 +156,22 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
           Text('Visualizations', style: theme.textTheme.headline5),
           const SizedBox(height: 20),
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EletronicDistribution(
-                    distribution: element.electronConfiguration ?? '',
-                  ),
-                  // Text('Eletronic distribution'),
-                  // Text(
-                  //   element.electronConfiguration ?? '',
-                  // ),
-                ],
+              DetailsGraphic(
+                title: 'Eletronic distribution',
+                child: _eletronicDistribution,
+                onTap: () {
+                  _showModal(_eletronicDistribution);
+                },
+              ),
+              _itemSpace(),
+              DetailsGraphic(
+                title: 'Eletronic configuration',
+                child: _elementShells,
+                onTap: () {
+                  _showModal(_elementShells);
+                },
               ),
             ],
           ),
@@ -216,11 +205,11 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
                   ),
                 ),
               ),
-              const SizedBox(height: 45),
+              const SizedBox(height: 55),
               _characteriscts(),
-              const SizedBox(height: 45),
+              const SizedBox(height: 55),
               _configurations(),
-              const SizedBox(height: 45),
+              const SizedBox(height: 55),
               _graphics(),
             ],
           ),
