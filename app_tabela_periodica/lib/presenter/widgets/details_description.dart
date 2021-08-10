@@ -20,8 +20,8 @@ class DetailsDescription extends StatelessWidget {
     final theme = Theme.of(context);
     return Card(
       child: Container(
+        constraints: BoxConstraints(minWidth: 210, minHeight: 210),
         padding: const EdgeInsets.all(10),
-        width: 190,
         child: Row(
           children: [
             const SizedBox(width: 5),
@@ -44,6 +44,7 @@ class DetailsDescription extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(width: 15),
           ],
         ),
       ),

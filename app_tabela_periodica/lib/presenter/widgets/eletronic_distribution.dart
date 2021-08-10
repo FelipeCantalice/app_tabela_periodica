@@ -45,7 +45,7 @@ class EletronicDistribution extends StatelessWidget {
           textAlign: TextAlign.start,
           style: theme.textTheme.bodyText1?.copyWith(
             fontSize: 16,
-            color: exists ? Colors.black : Colors.grey[500],
+            color: exists ? Colors.black : Colors.grey[200],
           ),
         );
       }
@@ -70,8 +70,10 @@ class EletronicDistribution extends StatelessWidget {
     }
 
     return Container(
-      width: 220,
-      height: 180,
+      constraints: BoxConstraints(
+        minHeight: 180,
+        minWidth: 180,
+      ),
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

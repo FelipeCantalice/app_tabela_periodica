@@ -2,6 +2,7 @@ import 'package:app_tabela_periodica/presenter/widgets/details_description.dart'
 import 'package:app_tabela_periodica/presenter/widgets/details_graphic.dart';
 import 'package:app_tabela_periodica/presenter/widgets/element_shells.dart';
 import 'package:app_tabela_periodica/presenter/widgets/eletronic_distribution.dart';
+import 'package:app_tabela_periodica/presenter/widgets/responsive/responsive.dart';
 import 'package:app_tabela_periodica/presenter/widgets/section_container.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tabela_periodica/domain/entities/elemento_quimico.dart';
@@ -49,40 +50,44 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
     }
 
     Widget _header() {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-            color: Colors.blue,
-            child: Text(
-              element.symbol ?? ' ',
-              style: theme.textTheme.headline3,
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              color: Colors.blue,
+              child: Text(
+                element.symbol ?? ' ',
+                style: theme.textTheme.headline3,
+              ),
             ),
-          ),
-          const SizedBox(width: 35),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                element.name ?? ' ',
-                style: theme.textTheme.headline5,
-              ),
-              Text(
-                element.name != null
-                    ? 'Discovered by ${element.name}'
-                    : 'Não identificado',
-                style: theme.textTheme.subtitle1,
-              ),
-              Text(
-                element.appearance != null
-                    ? 'Appearance,  ${element.appearance}'
-                    : 'Não identificado',
-                style: theme.textTheme.subtitle2,
-              ),
-            ],
-          ),
-        ],
+            const SizedBox(width: 35),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  element.name ?? ' ',
+                  style: theme.textTheme.headline5,
+                ),
+                Text(
+                  element.name != null
+                      ? 'Discovered by ${element.name}'
+                      : 'Não identificado',
+                  style: theme.textTheme.subtitle1,
+                ),
+                Text(
+                  element.appearance != null
+                      ? 'Appearance,  ${element.appearance}'
+                      : 'Não identificado',
+                  style: theme.textTheme.subtitle2,
+                ),
+              ],
+            ),
+          ],
+        ),
       );
     }
 
@@ -149,32 +154,41 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
     }
 
     Widget _graphics() {
+      final children = [
+        DetailsGraphic(
+          title: 'Eletronic distribution',
+          child: _eletronicDistribution,
+          onTap: () {
+            _showModal(_eletronicDistribution);
+          },
+        ),
+        _itemSpace(),
+        DetailsGraphic(
+          title: 'Eletronic configuration',
+          child: _elementShells,
+          onTap: () {
+            _showModal(_elementShells);
+          },
+        ),
+      ];
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text('Visualizations', style: theme.textTheme.headline5),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              DetailsGraphic(
-                title: 'Eletronic distribution',
-                child: _eletronicDistribution,
-                onTap: () {
-                  _showModal(_eletronicDistribution);
-                },
-              ),
-              _itemSpace(),
-              DetailsGraphic(
-                title: 'Eletronic configuration',
-                child: _elementShells,
-                onTap: () {
-                  _showModal(_elementShells);
-                },
-              ),
-            ],
-          ),
+          Responsive(
+            mobile: Column(
+              children: children,
+            ),
+            desktop: Row(
+              children: children,
+            ),
+            tablet: Row(
+              children: children,
+            ),
+          )
         ],
       );
     }
@@ -194,6 +208,8 @@ class _ElementoQuimicDetailsState extends State<ElementoQuimicDetails> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       _header(),
                       const SizedBox(height: 15),

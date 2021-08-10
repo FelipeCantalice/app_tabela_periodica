@@ -14,11 +14,12 @@ class DetailsGraphic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final media = MediaQuery.of(context);
     return Card(
       child: Container(
+        width: media.size.width >= 690 ? 210 : double.maxFinite,
+        height: media.size.width >= 690 ? 210 : null,
         padding: const EdgeInsets.all(10),
-        width: 200,
-        height: 200,
         child: InkWell(
           onTap: onTap,
           child: Column(
