@@ -1,5 +1,6 @@
 import 'package:app_tabela_periodica/domain/entities/elemento_quimico.dart';
 import 'package:app_tabela_periodica/presenter/pages/elemento-details/elemento_details_page.dart';
+import 'package:app_tabela_periodica/presenter/pages/elements-table/ElementsTablePage.dart';
 import 'package:app_tabela_periodica/presenter/widgets/periodic_table_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +21,22 @@ class HomeView extends StatelessWidget {
       );
     }
 
+    void _navigateToTable() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (c) => ElementsTablePage(
+            elementos: controller.elementos,
+          ),
+        ),
+      );
+    }
+
     Widget _gridView() {
       final elements = controller.filtedredElementos.isNotEmpty
           ? controller.filtedredElementos
           : controller.elementos;
       return GridView.builder(
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.only(top: 20),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 170,
           mainAxisExtent: 140,
@@ -47,50 +58,35 @@ class HomeView extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topLeft,
-        children: [
-          Container(
-            child: controller.isLoading
-                ? Center(
-                    child: Text("Loading..."),
-                  )
-                : _gridView(),
-          ),
-          controller.showSearch
-              ? Positioned(
-                  bottom: 20,
-                  left: 10,
-                  child: Card(
-                    elevation: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      width: MediaQuery.of(context).size.width / 1.1,
-                      height: 200,
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          TextField(
-                            onChanged: (String v) =>
-                                controller.filterElementos(v),
-                            decoration: InputDecoration(
-                              hintText: 'Pesquisar',
-                              suffixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ],
-                      ),
+      body: Container(
+        margin: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 10,
+        ),
+        child: controller.isLoading
+            ? Center(
+                child: Text("Loading..."),
+              )
+            : Column(
+                children: [
+                  TextField(
+                    onChanged: (String v) => controller.filterElementos(v),
+                    decoration: InputDecoration(
+                      hintText: 'Pesquisar',
+                      suffixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
                     ),
                   ),
-                )
-              : Container(),
-        ],
+                  Expanded(
+                    child: _gridView(),
+                  ),
+                ],
+              ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => controller.toggleSearch(),
+        onPressed: () => _navigateToTable(),
         child: Icon(
-          Icons.search,
+          Icons.view_carousel,
         ),
       ),
     );
